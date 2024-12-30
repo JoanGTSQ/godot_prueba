@@ -18,10 +18,18 @@ __meta__ = {
 
 [node name="DrawCard" type="Button" parent="."]
 margin_left = 20.0
-margin_top = 270.0
+margin_top = 225.0
 margin_right = 140.0
-margin_bottom = 330.0
+margin_bottom = 285.0
 text = "DRAW"
+
+[node name="SayUno" type="Button" parent="."]
+visible = false
+margin_left = 20.0
+margin_top = 299.0
+margin_right = 140.0
+margin_bottom = 359.0
+text = "UNO!"
 
 [node name="Card" parent="." groups=["main_card"] instance=ExtResource( 2 )]
 position = Vector2( 450, 220 )
@@ -43,3 +51,4 @@ uppercase = true
 
 [connection signal="ready" from="." to="." method="_on_Board_ready"]
 [connection signal="pressed" from="DrawCard" to="." method="_on_DrawCard_Button_pressed"]
+[connection signal="pressed" from="SayUno" to="." method="_on_say_uno_button_pressed"]
