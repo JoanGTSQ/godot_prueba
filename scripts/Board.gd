@@ -26,12 +26,10 @@ func update_main_card() -> void:
 	
 
 func _enable_say_uno_button() -> void:
-	if GameManager.get_current_player() == GameManager.PLAYER_TURN.PLAYER:
-		if _get_players_card_count() <= 2:
-			_say_uno_button.visible = true
-		else: _say_uno_button.visible = false
-	else:
-		_say_uno_button.visible = false
+	_say_uno_button.visible = (
+		GameManager.get_current_player() == GameManager.PLAYER_TURN.PLAYER 
+		and _get_players_card_count() <= 2
+	)
 
 func _get_players_card_count() -> int:
 	return _player_deck.get_node("CardContainer").get_child_count()
