@@ -26,8 +26,10 @@ func update_main_card() -> void:
 	
 
 func _enable_say_uno_button() -> void:
-	if _get_players_card_count() <= 2:
-		_say_uno_button.visible = true
+	if GameManager.get_current_player() == GameManager.PLAYER_TURN.PLAYER:
+		if _get_players_card_count() <= 2:
+			_say_uno_button.visible = true
+		else: _say_uno_button.visible = false
 	else:
 		_say_uno_button.visible = false
 
@@ -49,9 +51,10 @@ func _add_card_to_board(card : Card) -> void:
 func update_turn_label() -> void:
 	if GameManager.get_current_player() == GameManager.PLAYER_TURN.PLAYER:
 		_turn_label.text = "PLAYER TURN"
+		_enable_say_uno_button()
 	else:
 		_turn_label.text = "ENEMY TURN"
-	_enable_say_uno_button()
+	
 
 
 # Event triggered when the button is pressed
