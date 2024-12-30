@@ -116,9 +116,8 @@ func _check_game_end() -> bool:
 
 # Método para el jugador decir "UNO"
 func _on_signal_say_uno(player : int) -> void:
-	if _player_hands[player].size() == 1:
+	if _player_hands[player].size() == 2:
 		_player_said_uno = true
-		print("Player", player, "said UNO!")
 
 
 # Moves a card to the specified player's deck container.
@@ -141,6 +140,9 @@ func _ai_play() -> void:
 	if _player_turn == PLAYER_TURN.ENEMY:
 		for card in _player_hands[PLAYER_TURN.ENEMY]:
 			if DeckManager.is_valid_card(card):
+				var r_number = randi() % 99
+				if r_number % 2:
+					emit_signal("signal_say_uno", PLAYER_TURN.ENEMY)
 				emit_signal("signal_play_card", PLAYER_TURN.ENEMY, card)
 				return
 		emit_signal("signal_draw_card", PLAYER_TURN.ENEMY, false)
