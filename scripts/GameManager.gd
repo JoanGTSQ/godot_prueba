@@ -12,13 +12,13 @@ const INITIAL_HAND_SIZE : int = 7
 const ENEMY_WAIT_TIME : float = 1.5
 
 # Current player's turn.
-var _player_turn : int
+var _player_turn : int = 0
 var _player_hands : Array = []
 var _player_deck : Node = null
 var _player_deck_container : Node = null
 var _enemy_deck : Node = null
 var _enemy_deck_container : Node = null
-
+var _player_said_uno : bool = false
 
 # Signals for game events.
 signal signal_turn_changed(player)
@@ -27,6 +27,7 @@ signal signal_special_card_played(player, card)
 signal signal_play_card(player, card)
 signal signal_draw_card(player)
 signal signal_start_game()
+signal signal_say_uno(player)
 
 
 # Initializes the scene and connects signals.
@@ -53,6 +54,13 @@ func get_current_player() -> int:
 
 # --- Private Methods ---
 
+func _check_uno_rule(player : int) -> void:
+	if _player_hands[player].size() == 1 and not _player_said_uno:
+		print("Player", player, "did not say UNO! Penalizing with 2 cards.")
+		for _i in range(2):
+			emit_signal("signal_draw_card", player, true)
+
+
 # Applies the effects of a special card.
 # @param player The player who played the special card.
 func _apply_special_card(player : int, card : Card) -> bool:
@@ -67,6 +75,7 @@ func _apply_special_card(player : int, card : Card) -> bool:
 		_swap_decks()
 	return true
 
+
 func _swap_decks() -> void:
 	# Swap the hands in memory
 	var temp_hand = _player_hands[PLAYER_TURN.PLAYER]
@@ -78,17 +87,16 @@ func _swap_decks() -> void:
 		if card.get_parent():
 			card.get_parent().remove_child(card)
 		_player_deck_container.add_child(card)
-		card.set_filter(false)  # Make the player's cards visible
-	_player_deck.reposition_cards()
-
+		card.set_filter(false) 
+		
 	for card in _player_hands[PLAYER_TURN.ENEMY]:
 		if card.get_parent():
 			card.get_parent().remove_child(card)
 		_enemy_deck_container.add_child(card)
-		card.set_filter(true)  # Hide the enemy's cards
-	_enemy_deck.reposition_cards()
-
+		card.set_filter(true)  
+	
 	print("Decks have been swapped!")
+
 
 # Checks if it's the specified player's turn.
 # @param player The player to check.
@@ -105,6 +113,12 @@ func _check_game_end() -> bool:
 			_end_game()
 			return true
 	return false
+
+# Método para el jugador decir "UNO"
+func _on_signal_say_uno(player : int) -> void:
+	if _player_hands[player].size() == 1:
+		_player_said_uno = true
+		print("Player", player, "said UNO!")
 
 
 # Moves a card to the specified player's deck container.
@@ -135,6 +149,8 @@ func _ai_play() -> void:
 # Changes the turn to the next player.
 func _change_turn(is_special_card : bool) -> void:
 	if not is_special_card:
+		_check_uno_rule(_player_turn)
+		_player_said_uno = false
 		_player_turn = (_player_turn + 1) % 2
 	emit_signal("signal_turn_changed")
 
@@ -154,6 +170,7 @@ func _connect_signals() -> void:
 	connect("signal_card_played", self, "_on_signal_card_played")
 	connect("signal_draw_card", self, "_on_signal_draw_card")
 	connect("signal_play_card", self, "_on_signal_play_card")
+	connect("signal_say_uno", self, "_on_signal_say_uno")
 
 
 # Handles the event of the turn changing.
