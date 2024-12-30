@@ -97,12 +97,12 @@ func _recycle_discard_pile() -> void:
 		print("Not enough cards in the discard pile to recycle.")
 		return
 		
-	for card in discard_pile:
-		deck.append(card)
+	for i in range(discard_pile.size() - 1):
+		deck.append(discard_pile[i])
 	
 	_shuffle_deck()
 	
-	discard_pile = [discard_pile[-1]]
+	#discard_pile = [discard_pile[-1]]
 
 
 # Deals the initial card to the discard pile and handles special cases.
