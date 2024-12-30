@@ -56,7 +56,6 @@ func get_current_player() -> int:
 
 func _check_uno_rule(player : int) -> void:
 	if _player_hands[player].size() == 1 and not _player_said_uno:
-		print("Player", player, "did not say UNO! Penalizing with 2 cards.")
 		for _i in range(2):
 			emit_signal("signal_draw_card", player, true)
 
