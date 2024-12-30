@@ -21,7 +21,7 @@ func update_main_card() -> void:
 	else:
 		new_card = DeckManager.get_current_card()
 		_add_card_to_board(new_card)
-	print(new_card.is_special_card())
+
 
 func _add_card_to_board(card : Card) -> void:
 	# If the new card already has a parent, remove it from there
