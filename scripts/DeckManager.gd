@@ -2,7 +2,7 @@ extends Node2D
 
 
 # Array of possible card values.
-var values : Array = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+var values : Array = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
 # Array of possible card colors.
 var colors : Array = [Color(0.9, 0.3, 0.3), Color(0.4, 0.6, 0.9), Color(0.4, 0.9, 0.6), Color(0.9, 0.9, 0.4)]
@@ -107,8 +107,11 @@ func _recycle_discard_pile() -> void:
 
 # Deals the initial card to the discard pile and handles special cases.
 func _deal_initial_card() -> void:
-	var initial_card : Card = draw()
+	var initial_card: Card = draw()
 	discard_card(initial_card)
-	if initial_card.get_value() == "+2":
-		var new_card : Card = draw()
-		discard_card(new_card)
+	
+	# Loop until the drawn card is not special
+	while initial_card.is_special_card():
+		print("Special card drawn, drawing again...")
+		initial_card = draw()
+		discard_card(initial_card)
