@@ -7,7 +7,7 @@ const CARD : PackedScene = preload("res://scenes/Card.tscn")
 export(int) var initial_cards : int = 7
 
 # Public variables
-var values : Array = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+var values : Array = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 var colors : Array = [Color(0.9, 0.3, 0.3), Color(0.4, 0.6, 0.9), Color(0.4, 0.9, 0.6), Color(0.9, 0.9, 0.4)]
 var special_values : Array = ["+2", "SKIP", "SWAP"]
 
