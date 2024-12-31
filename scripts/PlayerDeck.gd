@@ -5,7 +5,7 @@ class_name PlayerDeck
 # Private variables 
 # Constants
 enum {
-	CARD_OFFSET = 81,
+	CARD_OFFSET = 80,
 	CARD_MIN_OFFSET = 70
 }
 
