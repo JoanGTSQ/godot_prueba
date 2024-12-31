@@ -24,7 +24,7 @@ func add_card(card: Card) -> void:
 func reposition_cards() -> void:
 	var card_count : int = _container.get_child_count()
 	var offset : int = CARD_OFFSET
-	var screen_width : int = get_viewport().size.x  # Screen width in Godot 3.6
+	var screen_width : float = get_viewport().size.x  # Screen width in Godot 3.6
 	
 	# If there are 7 or more cards, use a smaller offset
 	if card_count >= 7:

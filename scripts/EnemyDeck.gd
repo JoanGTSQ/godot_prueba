@@ -23,7 +23,7 @@ func add_card(card : Card) -> void:
 # If a card is going to overflow horizontally, it moves to the next row.
 func reposition_cards() -> void:
 	var card_count: int = _container.get_child_count()
-	var screen_width: int = get_viewport().size.x  # Screen width in Godot 3.6
+	var screen_width: float = get_viewport().size.x  # Screen width in Godot 3.6
 	
 	
 	var row: int = 0  # Current row index
