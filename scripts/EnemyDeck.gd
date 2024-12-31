@@ -2,20 +2,26 @@ extends Node2D
 
 class_name EnemyDeck
 
-var _card_offset = 81
+# Constants
+const CARD_OFFSET : int = 81
 
-onready var _container = $CardContainer
+# Onready variables
+onready var _container : Node = $CardContainer
 
 
-func add_card(card: Card) -> void:
+# Adds a card to the deck.
+# @param card The card to add.
+func add_card(card : Card) -> void:
 	card.position = global_position
 
 
-func reposition_cards():
+# Repositions all cards in the deck.
+func reposition_cards() -> void:
 	for i in range(_container.get_child_count()):
-		var card = _container.get_child(i)
-		card.position = Vector2(i*_card_offset, 0)
+		var card : Node2D = _container.get_child(i)
+		card.position = Vector2(i * CARD_OFFSET, 0)
 
 
-func _on_CardContainer_child_order_changed():
+# Signal handler for when the child order in the container changes.
+func _on_CardContainer_child_order_changed() -> void:
 	reposition_cards()
