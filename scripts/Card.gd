@@ -6,15 +6,17 @@ class_name Card
 var _special_card : bool = false
 
 # Onready variables
-onready var _card_container : Node2D = $CardContainer
-onready var _background : ColorRect = $CardContainer/Background
-onready var _value : Label = $CardContainer/Value
-onready var _animation_player : AnimationPlayer = $CardContainer/AnimationPlayer
-onready var _filter : Control = $CardContainer/Filter
+onready var _card : Node2D = $Card
+onready var _background : ColorRect = $Card/Background
+onready var _value : Label = $Card/Value
+onready var _animation_player : AnimationPlayer = $Card/AnimationPlayer
+onready var _filter : Control = $Card/Filter
 
 
+# Reset the position of the card to 0,0 this avoid bad positions in animations
 func reset_position() -> void:
-	_card_container.position = Vector2(0,0)
+	_card.position = Vector2(0,0)
+
 
 # Updates the card's color and value.
 # @param new_color The new color of the card.

@@ -1,8 +1,8 @@
 extends Node2D
 
-# Constants
 enum PLAYER_TURN { PLAYER, ENEMY }
-const INITIAL_HAND_SIZE : int = 7
+
+const INITIAL_HAND_SIZE : int = 40
 const ENEMY_WAIT_TIME : float = 1.5
 
 # Signals for game events
@@ -19,16 +19,17 @@ var _player_turn : int = 0
 var _player_hands : Array = []
 var _player_said_uno : bool = false
 
-# Deck containers and references
-var _player_deck : Node = null
+var _board : Node2D = null
+var _player_deck : Node2D = null
 var _player_deck_container : Node = null
-var _enemy_deck : Node = null
+var _enemy_deck : Node2D = null
 var _enemy_deck_container : Node = null
 
 
 # Initializes the scene and connects signals.
 func _ready() -> void:
 	_connect_signals()
+
 
 # Gets the current player.
 # @return int The current player.
@@ -85,12 +86,10 @@ func _check_game_end() -> bool:
 
 # Swaps the player and enemy decks.
 func _swap_decks() -> void:
-	# Swap hands
 	var temp_hand = _player_hands[PLAYER_TURN.PLAYER]
 	_player_hands[PLAYER_TURN.PLAYER] = _player_hands[PLAYER_TURN.ENEMY]
 	_player_hands[PLAYER_TURN.ENEMY] = temp_hand
 
-	# Move cards visually
 	for card in _player_hands[PLAYER_TURN.PLAYER]:
 		if card.get_parent():
 			card.get_parent().remove_child(card)
@@ -127,8 +126,7 @@ func _ai_play() -> void:
 		for card in _player_hands[PLAYER_TURN.ENEMY]:
 			if DeckManager.is_valid_card(card):
 				randomize()
-				var r_number = randi() % 99
-				if r_number % 2:
+				if (randi() %99) % 2:
 					emit_signal("signal_say_uno", PLAYER_TURN.ENEMY)
 				emit_signal("signal_play_card", PLAYER_TURN.ENEMY, card)
 				return
@@ -164,6 +162,7 @@ func _move_cards(player : int, card : Card) -> void:
 		card.get_parent().remove_child(card)
 	if player == PLAYER_TURN.PLAYER:
 		_player_deck_container.add_child(card)
+		card.set_filter(false)
 		_player_deck.reposition_cards()
 	elif player == PLAYER_TURN.ENEMY:
 		_enemy_deck_container.add_child(card)
@@ -173,9 +172,8 @@ func _move_cards(player : int, card : Card) -> void:
 
 # Handles the event of the turn changing.
 func _on_signal_turn_changed() -> void:
-	var board : Node = get_tree().root.get_node("Board")
-	board.update_turn_label()
-	board.update_main_card()
+	_board.update_turn_label()
+	_board.update_main_card()
 	if _player_turn == PLAYER_TURN.ENEMY:
 		yield(get_tree().create_timer(ENEMY_WAIT_TIME), "timeout")
 		_ai_play()
@@ -187,18 +185,21 @@ func _on_signal_start_game() -> void:
 	_player_turn = PLAYER_TURN.PLAYER
 
 	DeckManager.set_up()
-	print("Game started.")
-
+	
 	for _i in range(2):
 		yield(get_tree(), "idle_frame")
 
-	_player_deck = get_tree().root.get_node("Board/PlayerDeck")
+	_board = get_tree().root.get_node("Board")
+	_player_deck = _board.get_node("PlayerDeck")
 	_player_deck_container = _player_deck.get_node("CardContainer")
-	_enemy_deck = get_tree().root.get_node("Board/EnemyDeck")
+	_enemy_deck = _board.get_node("EnemyDeck")
 	_enemy_deck_container = _enemy_deck.get_node("CardContainer")
 
 	_player_hands = [[], []]
 	_deal_cards(INITIAL_HAND_SIZE)
+	
+	print("Game started.")
+
 
 
 # Handles the "UNO" call.
@@ -213,6 +214,9 @@ func _on_signal_say_uno(player : int) -> void:
 func _on_signal_draw_card(player : int, special_card : bool) -> void:
 	if player == _player_turn or special_card:
 		var card : Card = DeckManager.draw()
+		if card == null:
+			print("Can not draw more cards")
+			return
 		_player_hands[player].append(card)
 		_move_cards(player, card)
 	if not special_card:
@@ -222,20 +226,18 @@ func _on_signal_draw_card(player : int, special_card : bool) -> void:
 # Attempts to play a card for a player.
 # @param player The player playing the card.
 # @param card The card to play.
-# @return bool True if the card was successfully played.
-func _on_signal_play_card(player : int, card : Card) -> bool:
+func _on_signal_play_card(player : int, card : Card) -> void:
 	if DeckManager.is_valid_card(card) and _is_player_turn(player):
 		_player_hands[player].erase(card)
 		DeckManager.discard_card(card)
 		if _check_game_end():
-			return true
+			return 
 		if card.is_special_card():
 			if not _apply_special_card(player, card):
 				emit_signal("signal_special_card_played")
-				return true
+				return 
 		emit_signal("signal_card_played")
-		return true
-	return false
+		return  
 
 
 # Handles the event of a card being played.
