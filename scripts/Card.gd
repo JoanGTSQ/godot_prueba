@@ -6,11 +6,15 @@ class_name Card
 var _special_card : bool = false
 
 # Onready variables
-onready var _background : ColorRect = $Background
-onready var _value : Label = $Value
-onready var _animation_player : AnimationPlayer = $AnimationPlayer
-onready var _filter : Control = $Filter
+onready var _card_container : Node2D = $CardContainer
+onready var _background : ColorRect = $CardContainer/Background
+onready var _value : Label = $CardContainer/Value
+onready var _animation_player : AnimationPlayer = $CardContainer/AnimationPlayer
+onready var _filter : Control = $CardContainer/Filter
 
+
+func reset_position() -> void:
+	_card_container.position = Vector2(0,0)
 
 # Updates the card's color and value.
 # @param new_color The new color of the card.
@@ -26,6 +30,7 @@ func set_up(new_color : Color, new_value : String, special_card : bool) -> void:
 # @param event Input event to handle.
 func _on_CenterContainer_gui_input(event : InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and !self.is_in_group("main_card") and !_filter.visible:
+		reset_position()
 		# Emit the signal to play the card.
 		GameManager.emit_signal("signal_play_card", GameManager.PLAYER_TURN.PLAYER, self)
 

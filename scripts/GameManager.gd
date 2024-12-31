@@ -100,6 +100,7 @@ func _swap_decks() -> void:
 	for card in _player_hands[PLAYER_TURN.ENEMY]:
 		if card.get_parent():
 			card.get_parent().remove_child(card)
+		card.reset_position()
 		_enemy_deck_container.add_child(card)
 		card.set_filter(true)
 

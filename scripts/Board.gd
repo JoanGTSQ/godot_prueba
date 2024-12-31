@@ -77,3 +77,4 @@ func _on_say_uno_button_pressed() -> void:
 # Event handler for when the Board is ready.
 func _on_Board_ready() -> void:
 	update_main_card()
+	_player_deck.reposition_cards()
