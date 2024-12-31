@@ -2,13 +2,11 @@ extends Node2D
 
 class_name PlayerDeck
 
-# Private variables 
-# Constants
+
 enum {
 	CARD_OFFSET = 80,
 	CARD_MIN_OFFSET = 70
 }
-
 
 # Onready variables
 onready var _container: Node = $CardContainer
@@ -20,9 +18,6 @@ func add_card(card: Card) -> void:
 	card.position = global_position
 
 
-# Repositions the cards based on the number of cards in the container.
-# If there are 7 or more cards, it uses a smaller offset.
-# If a card is going to overflow horizontally, it moves to the next row.
 # Repositions the cards based on the number of cards in the container.
 # If there are 7 or more cards, it uses a smaller offset.
 # If a card is going to overflow horizontally, it moves to the next row.
