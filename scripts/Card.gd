@@ -21,6 +21,7 @@ func set_up(new_color : Color, new_value : String, special_card : bool) -> void:
 	_value.text = new_value
 	_special_card = special_card
 
+
 # Event handler for mouse input on the card.
 # @param event Input event to handle.
 func _on_CenterContainer_gui_input(event : InputEvent) -> void:
