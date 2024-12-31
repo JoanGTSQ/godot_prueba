@@ -132,7 +132,9 @@ func _on_signal_start_game() -> void:
 	DeckManager.set_up()
 	print("Game started.")
 
-	yield(get_tree(), "idle_frame")
+	for _i in range(2):
+		yield(get_tree(), "idle_frame")
+
 	_player_deck = get_tree().root.get_node("Board/PlayerDeck")
 	_player_deck_container = _player_deck.get_node("CardContainer")
 	_enemy_deck = get_tree().root.get_node("Board/EnemyDeck")
