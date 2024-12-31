@@ -3,7 +3,7 @@ extends Node2D
 # Onready variables
 onready var _main_card : Node2D = $Card
 onready var _turn_label : Label = $TurnLabel
-onready var _player_deck : Control = $PlayerDeck
+onready var _player_deck : Node2D = $PlayerDeck
 onready var _say_uno_button : Button = $SayUno
 
 
