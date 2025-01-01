@@ -2,7 +2,7 @@ extends Node2D
 
 enum PLAYER_TURN { PLAYER, ENEMY }
 
-const INITIAL_HAND_SIZE : int = 3
+const INITIAL_HAND_SIZE : int = 7
 const ENEMY_WAIT_TIME : float = 1.5
 
 # Signals for game events
