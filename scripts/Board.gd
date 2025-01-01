@@ -34,13 +34,14 @@ func update_turn_label() -> void:
 		_enable_say_uno_button()
 	else:
 		_turn_label.text = "ENEMY TURN"
+		_say_uno_button.visible = false
 
 
 # Enables the SayUno button if the player has 2 cards or less.
 func _enable_say_uno_button() -> void:
 	_say_uno_button.visible = (
 		GameManager.get_current_player() == GameManager.PLAYER_TURN.PLAYER
-		and _get_players_card_count() <= 2
+		and _get_players_card_count() == 2
 	)
 
 
