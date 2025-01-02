@@ -60,6 +60,7 @@ func _add_card_to_board(card : Card) -> void:
 
 	# Add the new card to the node and set its position.
 	add_child(card)
+	card.set_filter(false)
 	card.position = _main_card.position
 	card.add_to_group("main_card")
 
