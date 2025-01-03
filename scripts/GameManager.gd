@@ -11,7 +11,6 @@ signal signal_card_played(player, card)
 signal signal_special_card_played(player, card)
 signal signal_play_card(player, card)
 signal signal_draw_card(player)
-signal signal_start_game()
 signal signal_say_uno(player)
 
 # Variables
@@ -29,6 +28,28 @@ var _enemy_deck_container : Node = null
 # Initializes the scene and connects signals.
 func _ready() -> void:
 	_connect_signals()
+
+
+# Handles the start of the game.
+func start_game() -> void:
+	get_tree().change_scene("res://scenes/Board.tscn")
+	_player_turn = PLAYER_TURN.PLAYER
+
+	DeckManager.set_up()
+	
+	for _i in range(2):
+		yield(get_tree(), "idle_frame")
+
+	_board = get_tree().root.get_node("Board")
+	_player_deck = _board.get_node("PlayerDeck")
+	_player_deck_container = _player_deck.get_node("CardContainer")
+	_enemy_deck = _board.get_node("EnemyDeck")
+	_enemy_deck_container = _enemy_deck.get_node("CardContainer")
+
+	_player_hands = [[], []]
+	_deal_cards(INITIAL_HAND_SIZE)
+	
+	print("Game started.")
 
 
 # Returns the current player's turn.
@@ -118,6 +139,7 @@ func _is_player_turn(player : int) -> bool:
 
 # Ends the game and transitions to the Game Over scene.
 func _end_game() -> void:
+	
 	DeckManager.destroy()
 	get_tree().change_scene("res://scenes/GameOverScene.tscn")
 	print("Game ended.")
@@ -129,7 +151,7 @@ func _ai_play() -> void:
 		for card in _player_hands[PLAYER_TURN.ENEMY]:
 			if DeckManager.is_valid_card(card):
 				randomize()
-				if (randi() %99) % 2:
+				if (randi() % 2 + 1) % 2:
 					emit_signal("signal_say_uno", PLAYER_TURN.ENEMY)
 				emit_signal("signal_play_card", PLAYER_TURN.ENEMY, card)
 				return
@@ -139,6 +161,8 @@ func _ai_play() -> void:
 # Changes the turn to the next player.
 # @param is_special_card Whether the turn change was triggered by a special card.
 func _change_turn(is_special_card : bool) -> void:
+	if _check_game_end():
+			return 
 	if not is_special_card:
 		_check_uno_rule(_player_turn)
 		_player_said_uno = false
@@ -164,7 +188,6 @@ func _move_cards(player : int, card : Card) -> void:
 
 # Connects signals to their respective methods.
 func _connect_signals() -> void:
-	connect("signal_start_game", self, "_on_signal_start_game")
 	connect("signal_turn_changed", self, "_on_signal_turn_changed")
 	connect("signal_special_card_played", self, "_on_signal_special_card_played")
 	connect("signal_card_played", self, "_on_signal_card_played")
@@ -181,29 +204,6 @@ func _on_signal_turn_changed() -> void:
 	if _player_turn == PLAYER_TURN.ENEMY:
 		yield(get_tree().create_timer(ENEMY_WAIT_TIME), "timeout")
 		_ai_play()
-
-
-# Handles the start of the game.
-func _on_signal_start_game() -> void:
-	get_tree().change_scene("res://scenes/Board.tscn")
-	_player_turn = PLAYER_TURN.PLAYER
-
-	DeckManager.set_up()
-	
-	for _i in range(2):
-		yield(get_tree(), "idle_frame")
-
-	_board = get_tree().root.get_node("Board")
-	_player_deck = _board.get_node("PlayerDeck")
-	_player_deck_container = _player_deck.get_node("CardContainer")
-	_enemy_deck = _board.get_node("EnemyDeck")
-	_enemy_deck_container = _enemy_deck.get_node("CardContainer")
-
-	_player_hands = [[], []]
-	_deal_cards(INITIAL_HAND_SIZE)
-	
-	print("Game started.")
-
 
 
 # Handles the "UNO" call.
@@ -236,8 +236,6 @@ func _on_signal_play_card(player : int, card : Card) -> void:
 	if DeckManager.is_valid_card(card) and _is_player_turn(player):
 		_player_hands[player].erase(card)
 		DeckManager.discard_card(card)
-		if _check_game_end():
-			return 
 		if card.is_special_card():
 			if not _apply_special_card(player, card):
 				emit_signal("signal_special_card_played")

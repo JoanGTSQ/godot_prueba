@@ -28,10 +28,8 @@ func reposition_cards() -> void:
 	var row: int = 0
 	var x_position: float = 0.0
 	
-	
 	for i in range(card_count):
 		var card: Node2D = _container.get_child(i)
-		
 		if x_position + CARD_OFFSET > screen_width:
 			row += 1
 			x_position = 0  
@@ -41,7 +39,7 @@ func reposition_cards() -> void:
 		card.position = Vector2(x_position, y_position)
 		
 		x_position +=  CARD_OFFSET
-
+	
 
 # Signal handler for when the child order in the container changes.
 func _on_card_container_child_order_changed() -> void:

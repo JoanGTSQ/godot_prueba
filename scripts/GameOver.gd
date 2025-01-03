@@ -26,8 +26,6 @@ func _display_winner_message() -> void:
 # Handles input events for restarting or quitting the game.
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_accept"):
-		# Restart the game by emitting the start signal
-		GameManager.emit_signal("signal_start_game")
+		GameManager.start_game()
 	elif event.is_action_pressed("ui_cancel"):
-		# Quit the game
 		get_tree().quit()

@@ -15,16 +15,12 @@ func update_main_card() -> void:
 
 	if new_card == current_card:
 		return
-
-
-	if get_tree().get_nodes_in_group("main_card").size() >= 1:
-		# Remove the current card from the group and parent node.
-		current_card.remove_from_group("main_card")
-		current_card.get_parent().remove_child(current_card)
-	else:
-		new_card = DeckManager.draw()
+	
+	current_card.remove_from_group("main_card")
+	current_card.get_parent().remove_child(current_card)
 	
 	_add_card_to_board(new_card)
+	_enable_say_uno_button()
 
 
 # Updates the TurnLabel text.
