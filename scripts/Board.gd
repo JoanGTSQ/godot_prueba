@@ -23,7 +23,7 @@ func update_main_card() -> void:
 		current_card.remove_from_group("main_card")
 		current_card.get_parent().remove_child(current_card)
 	else:
-		new_card = DeckManager.get_current_card()
+		new_card = DeckManager.draw()
 		_add_card_to_board(new_card)
 
 
@@ -66,7 +66,7 @@ func _add_card_to_board(card : Card) -> void:
 
 
 # Event handler for when the DrawCard button is pressed.
-func _on_DrawCard_Button_pressed() -> void:
+func _on_draw_card_button_pressed() -> void:
 	if GameManager.get_current_player() == GameManager.PLAYER_TURN.PLAYER:
 		GameManager.emit_signal("signal_draw_card", GameManager.PLAYER_TURN.PLAYER, false)
 

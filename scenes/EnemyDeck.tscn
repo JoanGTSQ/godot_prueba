@@ -9,4 +9,4 @@ script = ExtResource( 1 )
 margin_right = 600.0
 margin_bottom = 120.0
 
-[connection signal="child_order_changed" from="CardContainer" to="." method="_on_CardContainer_child_order_changed"]
+[connection signal="child_order_changed" from="CardContainer" to="." method="_on_card_container_child_order_changed"]

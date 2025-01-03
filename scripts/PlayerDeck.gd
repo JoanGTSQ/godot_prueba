@@ -2,6 +2,7 @@ extends Node2D
 
 class_name PlayerDeck
 
+const CARD_WIDTH : float = 80.0
 
 enum {
 	CARD_OFFSET = 80,
@@ -24,40 +25,31 @@ func add_card(card: Card) -> void:
 func reposition_cards() -> void:
 	var card_count : int = _container.get_child_count()
 	var offset : int = CARD_OFFSET
-	var screen_width : float = get_viewport().size.x  # Screen width in Godot 3.6
+	var screen_width : float = get_viewport().size.x
+	var row: int = 0  
+	var x_position: float = 0
 	
 	# If there are 7 or more cards, use a smaller offset
 	if card_count >= 7:
 		offset = CARD_MIN_OFFSET
 	
-	var row: int = 0  # Current row index
-	var x_position: float = 0  # Current x position within the row
+	
 	for i in range(card_count):
 		var card: Node2D = _container.get_child(i)
 		
-		# Get the card's width
-		var card_width: float = 80
-		
-		# If the card would overflow the screen width, move to the next row
-		if x_position + card_width > screen_width:
+		if x_position + CARD_WIDTH > screen_width:
 			row += 1
-			x_position = 0  # Reset x position for the new row
+			x_position = 0
 		
-		# Calculate y position based on the row
 		var y_position: float = row * (CARD_MIN_OFFSET)
 		
-		# Set the card's position
 		card.position = Vector2(x_position, y_position)
 		
-		# Update x_position for the next card
 		x_position +=  offset
-
-
-
 
 
 # Signal handler for when the child order changes in the container.
 # Repositions the cards after the order has changed.
-func _on_CardContainer_child_order_changed() -> void:
+func _on_card_container_child_order_changed() -> void:
 	reposition_cards()
 

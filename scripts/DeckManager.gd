@@ -51,9 +51,7 @@ func get_current_card() -> Card:
 # @param card The card to validate.
 # @return bool True if valid, false otherwise.
 func is_valid_card(card : Card) -> bool:
-	if discard_pile[-1].get_color() == card.get_color() or discard_pile[-1].get_value() == card.get_value():
-		return true
-	return false
+	return discard_pile[-1].get_color() == card.get_color() or discard_pile[-1].get_value() == card.get_value()
 
 
 # Frees all the cards in the deck.
@@ -81,7 +79,7 @@ func _initialize_deck() -> void:
 			deck.append(new_card)
 
 
-# Shuffles the deck randomly.
+# Randomizes and shuffles the deck to ensure randomness in card order.
 func _shuffle_deck() -> void:
 	randomize()
 	deck.shuffle()

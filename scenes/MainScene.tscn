@@ -39,4 +39,4 @@ custom_styles/disabled = SubResource( 4 )
 custom_styles/normal = SubResource( 5 )
 text = "START GAME"
 
-[connection signal="pressed" from="StartGame" to="." method="_on_StartGame_Button_pressed"]
+[connection signal="pressed" from="StartGame" to="." method="_on_start_game_button_pressed"]

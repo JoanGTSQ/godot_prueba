@@ -50,5 +50,5 @@ text = "PLAYER TURN"
 uppercase = true
 
 [connection signal="ready" from="." to="." method="_on_Board_ready"]
-[connection signal="pressed" from="DrawCard" to="." method="_on_DrawCard_Button_pressed"]
+[connection signal="pressed" from="DrawCard" to="." method="_on_draw_card_button_pressed"]
 [connection signal="pressed" from="SayUno" to="." method="_on_say_uno_button_pressed"]

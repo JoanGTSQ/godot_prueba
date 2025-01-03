@@ -31,14 +31,15 @@ func _ready() -> void:
 	_connect_signals()
 
 
-# Gets the current player.
-# @return int The current player.
+# Returns the current player's turn.
+# @return int The index of the current player (0 for PLAYER, 1 for ENEMY).
 func get_current_player() -> int:
 	return _player_turn
 
 
 # Deals a specified number of cards to each player.
-# @param num_cards Number of cards to deal.
+# Iterates through the player hands and draws cards from the deck.
+# @param num_cards int The number of cards to deal to each player.
 func _deal_cards(num_cards : int) -> void:
 	for _i in range(num_cards):
 		for i in range(_player_hands.size()):
@@ -57,10 +58,12 @@ func _check_uno_rule(player : int) -> void:
 			emit_signal("signal_draw_card", player, true)
 
 
-# Applies a special card effect.
-# @param player The player who played the card.
-# @param card The special card.
-# @return bool False if the turn should skip, true otherwise.
+# Applies the effect of a special card.
+# Depending on the card's value, it may force the opponent to draw cards,
+# skip their turn, or swap decks.
+# @param player int The player who played the special card.
+# @param card Card The special card being played.
+# @return bool False if the next turn should be skipped, true otherwise.
 func _apply_special_card(player : int, card : Card) -> bool:
 	var other_player : int = (player + 1) % 2
 	match card.get_value():
@@ -133,17 +136,6 @@ func _ai_play() -> void:
 		emit_signal("signal_draw_card", PLAYER_TURN.ENEMY, false)
 
 
-# Connects signals to their respective methods.
-func _connect_signals() -> void:
-	connect("signal_start_game", self, "_on_signal_start_game")
-	connect("signal_turn_changed", self, "_on_signal_turn_changed")
-	connect("signal_special_card_played", self, "_on_signal_special_card_played")
-	connect("signal_card_played", self, "_on_signal_card_played")
-	connect("signal_draw_card", self, "_on_signal_draw_card")
-	connect("signal_play_card", self, "_on_signal_play_card")
-	connect("signal_say_uno", self, "_on_signal_say_uno")
-
-
 # Changes the turn to the next player.
 # @param is_special_card Whether the turn change was triggered by a special card.
 func _change_turn(is_special_card : bool) -> void:
@@ -168,6 +160,18 @@ func _move_cards(player : int, card : Card) -> void:
 		_enemy_deck_container.add_child(card)
 		card.set_filter(true)
 		_enemy_deck.reposition_cards()
+
+
+# Connects signals to their respective methods.
+func _connect_signals() -> void:
+	connect("signal_start_game", self, "_on_signal_start_game")
+	connect("signal_turn_changed", self, "_on_signal_turn_changed")
+	connect("signal_special_card_played", self, "_on_signal_special_card_played")
+	connect("signal_card_played", self, "_on_signal_card_played")
+	connect("signal_draw_card", self, "_on_signal_draw_card")
+	connect("signal_play_card", self, "_on_signal_play_card")
+	connect("signal_say_uno", self, "_on_signal_say_uno")
+
 
 
 # Handles the event of the turn changing.
@@ -208,9 +212,11 @@ func _on_signal_say_uno(player : int) -> void:
 		_player_said_uno = true
 
 
-# Draws a card for a player.
-# @param player The player drawing the card.
-# @param special_card Whether the card is drawn due to a special effect.
+# Signal handler for drawing a card.
+# When a player draws a card, it's added to their hand and positioned correctly.
+# If the card is not drawn due to a special effect, the turn changes.
+# @param player int The player who is drawing the card.
+# @param special_card bool Whether the card is drawn due to a special effect.
 func _on_signal_draw_card(player : int, special_card : bool) -> void:
 	if player == _player_turn or special_card:
 		var card : Card = DeckManager.draw()

@@ -13,7 +13,7 @@ onready var _animation_player : AnimationPlayer = $Card/AnimationPlayer
 onready var _filter : Control = $Card/Filter
 
 
-# Reset the position of the card to 0,0 this avoid bad positions in animations
+# Resets the card's position for proper animation alignment.
 func reset_position() -> void:
 	_card.position = Vector2(0,0)
 
@@ -30,7 +30,7 @@ func set_up(new_color : Color, new_value : String, special_card : bool) -> void:
 
 # Event handler for mouse input on the card.
 # @param event Input event to handle.
-func _on_CenterContainer_gui_input(event : InputEvent) -> void:
+func _on_center_container_gui_input(event : InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and !self.is_in_group("main_card") and !_filter.visible:
 		reset_position()
 		# Emit the signal to play the card.
@@ -38,19 +38,19 @@ func _on_CenterContainer_gui_input(event : InputEvent) -> void:
 
 
 # Event handler for when the mouse enters the card area.
-func _on_CenterContainer_mouse_entered() -> void:
+func _on_center_container_mouse_entered() -> void:
 	if !self.is_in_group("main_card"):
 		_animation_player.play("hover_in")
 
 
 # Event handler for when the mouse exits the card area.
-func _on_CenterContainer_mouse_exited() -> void:
+func _on_center_container_mouse_exited() -> void:
 	if !self.is_in_group("main_card"):
 		_animation_player.play("hover_out")
 
 
 # Event handler for when the card is removed from the scene.
-func _on_Card_tree_exiting() -> void:
+func _on_card_container_tree_exiting() -> void:
 	_animation_player.stop(false)
 
 

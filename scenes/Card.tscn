@@ -80,7 +80,7 @@ margin_right = 80.0
 margin_bottom = 162.0
 color = Color( 0, 0, 0, 1 )
 
-[connection signal="tree_exiting" from="." to="." method="_on_Card_tree_exiting"]
-[connection signal="gui_input" from="Card/CenterContainer" to="." method="_on_CenterContainer_gui_input"]
-[connection signal="mouse_entered" from="Card/CenterContainer" to="." method="_on_CenterContainer_mouse_entered"]
-[connection signal="mouse_exited" from="Card/CenterContainer" to="." method="_on_CenterContainer_mouse_exited"]
+[connection signal="tree_exiting" from="." to="." method="_on_card_container_tree_exiting"]
+[connection signal="gui_input" from="Card/CenterContainer" to="." method="_on_center_container_gui_input"]
+[connection signal="mouse_entered" from="Card/CenterContainer" to="." method="_on_center_container_mouse_entered"]
+[connection signal="mouse_exited" from="Card/CenterContainer" to="." method="_on_center_container_mouse_exited"]
