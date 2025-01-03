@@ -139,7 +139,6 @@ func _is_player_turn(player : int) -> bool:
 
 # Ends the game and transitions to the Game Over scene.
 func _end_game() -> void:
-	
 	DeckManager.destroy()
 	get_tree().change_scene("res://scenes/GameOverScene.tscn")
 	print("Game ended.")
@@ -148,14 +147,24 @@ func _end_game() -> void:
 # Executes the AI player's turn.
 func _ai_play() -> void:
 	if _player_turn == PLAYER_TURN.ENEMY:
+		var special_card : Card = null
+		var normal_card : Card = null
+		
 		for card in _player_hands[PLAYER_TURN.ENEMY]:
 			if DeckManager.is_valid_card(card):
-				randomize()
-				if (randi() % 2 + 1) % 2:
-					emit_signal("signal_say_uno", PLAYER_TURN.ENEMY)
-				emit_signal("signal_play_card", PLAYER_TURN.ENEMY, card)
-				return
-		emit_signal("signal_draw_card", PLAYER_TURN.ENEMY, false)
+				if card.is_special_card():
+					special_card = card
+				elif normal_card == null:
+					normal_card = card 
+		
+		var selected_card : Card = special_card if special_card != null else normal_card
+		if selected_card != null:
+			randomize()
+			if randi() % 2 == 0:  
+				emit_signal("signal_say_uno", PLAYER_TURN.ENEMY)
+			emit_signal("signal_play_card", PLAYER_TURN.ENEMY, selected_card)
+		else:
+			emit_signal("signal_draw_card", PLAYER_TURN.ENEMY, false)
 
 
 # Changes the turn to the next player.
